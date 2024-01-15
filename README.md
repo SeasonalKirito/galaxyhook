@@ -1,4 +1,4 @@
-# GalaxyHook
+# GalaxyHook 🌌
 
 GalaxyHook is a versatile tool for interacting with Discord webhooks, offering a range of functionalities. This script can be used to send messages, delete webhooks, rename webhooks, spam webhooks, change avatars, and logout from Discord webhooks.
 
