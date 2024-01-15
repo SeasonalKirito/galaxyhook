@@ -1,9 +1,33 @@
 import requests
+import datetime
+
 from src.ansi import Fore
+from src.log_manager import log_manager
 
 class url_manager():
     def __init__(self):
         self.DEBUG = True
+        self.log_manager = log_manager()
+
+    def _get_time(self):
+        return str(datetime.datetime.now().strftime('%H:%M:%S'))
+    
+    def _extract_webhook_id(self, webhook_url: str=None):
+        if webhook_url is None:
+            return self._debug("No webhook url provided")
+        else:
+            webhook_url = webhook_url.replace("https://discord.com/api/webhooks/", "")
+            webhook_url = webhook_url.replace("/", "][")
+            return str("[" + webhook_url)
+
+    def _success(self, message: str= None):
+        return(f"{Fore.GREEN}[SUCCESS] {message}{Fore.RESET}")
+    
+    def _error(self, message: str= None):
+        return(f"{Fore.RED}[ERROR] {message}{Fore.RESET}")
+    
+    def _info(self, message: str= None):
+        return(f"{Fore.CYAN}[INFO] {message}{Fore.RESET}")
 
     def _debug(self, message: str= None):
         if self.DEBUG:
@@ -28,6 +52,11 @@ class url_manager():
             return self._debug("No webhook url provided")
         if message is None:
             return self._debug("No message provided")
+        
+        webhook_extracted_id = self._extract_webhook_id(webhook_url)
+        print(self.log_manager._deep_debug(f"[{self._get_time()}] [{webhook_extracted_id}] SENT: {message}"))
+        self.log_manager._deep_log(f"{webhook_extracted_id}.log", f"[{self._get_time()}] [{webhook_extracted_id}] SENT: [{message}]")
+
         requests.post(webhook_url, json={"content": message})
 
     def _spam(self, webhook_url: str=None, message: str=None, amount: int=None):
